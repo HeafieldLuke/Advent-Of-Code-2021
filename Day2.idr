@@ -7,10 +7,12 @@ data Command
   | NoOp
 
 calculatePosition : (Int, Int) -> Command -> (Int, Int)
-calculatePosition (horizontal, depth) (Forward x) = (horizontal + x, depth)
-calculatePosition (horizontal, depth) (Down x) = (horizontal, depth + x)
-calculatePosition (horizontal, depth) (Up x) = (horizontal, depth - x)
-calculatePosition position NoOp = position
+calculatePosition orig@(horizontal, depth) command =
+  case command of
+       (Forward x) => (horizontal + x, depth)
+       (Down x) => (horizontal, depth + x)
+       (Up x) => (horizontal, depth - x)
+       NoOp => orig
 
 
 calculatePositionWithAim : (Int, Int, Int) -> Command -> (Int, Int, Int)
@@ -43,7 +45,7 @@ main = do file <- readFile "input/day2.txt"
                  ("down", val) => Down (cast val)
                  ("up", val) => Up (cast val)
                  _ => NoOp
-                 
+
          cleanInput : String -> List Command
          cleanInput input =
             map parseCommand (lines input)
